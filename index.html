@@ -1,0 +1,602 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Jaringan Tumbuhan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;700;800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: lembar praktikum. Header bernoda safranin, navigasi tab menempel, satu kolom konten dengan panel kerja. */
+:root{
+  --bg:#F1F6F3; --surface:#FFFFFF; --surface2:#E4EDE8; --fg:#12302B; --muted:#4A625C; --line:#C8D8D0;
+  --accent:#B5294F; --accent-fg:#FFFFFF; --green:#1F7A57;
+  --xilem:#B07548; --floem:#5FB58A; --kambium:#1E5E45; --ground:#CFE6D8;
+  --wall:#C98B5B; --wall2:#8A5230; --lumen:#F4D77A;
+  --good:#1F7A57; --good-bg:#DDF1E6; --bad:#B3261E; --bad-bg:#FBE2DF;
+  --font-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1815; --surface:#15251F; --surface2:#1D332B; --fg:#E3F0EA; --muted:#9DB6AC; --line:#2B433B;
+    --accent:#F2748F; --accent-fg:#2A0610; --green:#5FC796;
+    --xilem:#C98C63; --floem:#6BC496; --kambium:#3E9C76; --ground:#26463B;
+    --wall:#B87A4E; --wall2:#7A4A2B; --lumen:#D9B84F;
+    --good:#5FC796; --good-bg:#17382B; --bad:#FF8F86; --bad-bg:#3C1B19;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1815; --surface:#15251F; --surface2:#1D332B; --fg:#E3F0EA; --muted:#9DB6AC; --line:#2B433B;
+  --accent:#F2748F; --accent-fg:#2A0610; --green:#5FC796;
+  --xilem:#C98C63; --floem:#6BC496; --kambium:#3E9C76; --ground:#26463B;
+  --wall:#B87A4E; --wall2:#7A4A2B; --lumen:#D9B84F;
+  --good:#5FC796; --good-bg:#17382B; --bad:#FF8F86; --bad-bg:#3C1B19;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-display);line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+header.top{display:flex;gap:20px;align-items:center;justify-content:space-between;padding-block:28px 18px;flex-wrap:wrap}
+.top .kicker{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.top h1{font-size:clamp(2.1rem,6vw,3.4rem);font-weight:800;margin-top:6px}
+.top p.sub{color:var(--muted);margin-top:8px;max-width:46ch}
+.school{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{height:52px;width:auto;background:#fff;border-radius:10px;padding:4px;border:1px solid var(--line)}
+.note{margin-top:36px;color:var(--muted);font-size:.85rem;text-align:center}
+.stem{width:112px;height:112px;flex:none}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.stat{background:var(--surface2);border-radius:999px;padding:4px 12px;font-size:.85rem;color:var(--muted)}
+.stat b{color:var(--fg);font-variant-numeric:tabular-nums}
+
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+  display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:0;background:transparent;padding:9px 14px;border-radius:999px;font-weight:600;color:var(--muted);white-space:nowrap}
+.tab:hover{background:var(--surface2);color:var(--fg)}
+.tab[aria-selected="true"]{background:var(--fg);color:var(--bg)}
+
+section.panel{padding-top:26px}
+.panel-head{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.panel-head h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:700}
+.panel-head p{color:var(--muted);max-width:62ch}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 16px;border-radius:10px;font-weight:600}
+.btn:hover{border-color:var(--fg)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn[disabled]{opacity:.5;cursor:default}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* Materi */
+.groups{display:grid;gap:18px;grid-template-columns:1fr 2fr}
+@media(max-width:720px){.groups{grid-template-columns:1fr}}
+.group h3{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-family:var(--font-body);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;font-weight:600}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+#detail{margin-top:18px;display:grid;gap:14px}
+#detail h3{font-size:1.7rem;font-weight:700}
+#detail .tag{display:inline-block;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+#detail ul{margin:0;padding-left:1.15rem;display:grid;gap:8px;max-width:64ch}
+#detail li::marker{color:var(--accent)}
+.kw{display:flex;gap:8px;flex-wrap:wrap}
+.kw span{background:var(--surface2);border-radius:6px;padding:3px 9px;font-size:.85rem;color:var(--muted)}
+.sublist{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.sublist div{background:var(--surface2);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.sublist b{display:block;font-family:var(--font-display);font-size:1.05rem;margin-bottom:2px}
+
+/* Lab */
+.lab{display:grid;gap:20px;grid-template-columns:minmax(0,300px) minmax(0,1fr);align-items:start}
+@media(max-width:720px){.lab{grid-template-columns:1fr}}
+.lab svg{width:100%;height:auto;max-width:300px;display:block;margin:0 auto}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.seg button{border:1.5px solid var(--line);background:var(--surface);border-radius:8px;padding:7px 13px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:.9rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.lab-text{display:grid;gap:10px}
+.lab-text h3{font-size:1.35rem}
+.tablebox{overflow-x:auto;margin-top:20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.95rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-display);background:var(--surface2)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+
+/* Kartu */
+.deckbar{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.bar{flex:1;height:8px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.count{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem;white-space:nowrap}
+.flash{width:100%;min-height:240px;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:28px 24px;text-align:left;
+  display:flex;flex-direction:column;justify-content:center;gap:12px;box-shadow:0 1px 0 var(--line)}
+.flash:hover{border-color:var(--accent)}
+.flash small{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.flash .term{font-family:var(--font-display);font-size:clamp(1.6rem,5vw,2.3rem);font-weight:700}
+.flash .def{font-size:1.1rem;max-width:56ch}
+.flash .hint{color:var(--muted);font-size:.88rem}
+.flash.back{background:var(--surface2)}
+
+/* Kuis */
+.qbox{display:grid;gap:16px}
+.qmeta{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.qtext{font-family:var(--font-display);font-size:clamp(1.25rem,3.6vw,1.65rem);font-weight:600;line-height:1.3}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--surface);padding:12px 14px;border-radius:12px}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt .l{flex:none;width:26px;height:26px;border-radius:50%;background:var(--surface2);display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.opt.ok{border-color:var(--good);background:var(--good-bg)}
+.opt.no{border-color:var(--bad);background:var(--bad-bg)}
+.opt[disabled]{cursor:default}
+.expl{padding:12px 14px;border-radius:10px;background:var(--surface2);font-size:.95rem}
+.score{font-family:var(--font-display);font-size:3.2rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums}
+.review{display:grid;gap:10px;margin-top:6px}
+.review div{background:var(--surface2);border-radius:10px;padding:10px 14px;font-size:.95rem}
+
+/* Cocokkan */
+.match{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.col{display:grid;gap:10px;align-content:start;min-width:0}
+.m{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:11px 12px;text-align:left;min-width:0;overflow-wrap:anywhere;font-size:.95rem}
+.m.term{font-weight:700;font-family:var(--font-display);font-size:1.02rem}
+.m:hover:not([disabled]){border-color:var(--accent)}
+.m.sel{border-color:var(--accent);background:var(--surface2);box-shadow:inset 0 0 0 1px var(--accent)}
+.m.done{border-color:var(--good);background:var(--good-bg);opacity:.75}
+.m.wrong{border-color:var(--bad);background:var(--bad-bg)}
+@media(prefers-reduced-motion:no-preference){.m.wrong{animation:sh .35s}}
+@keyframes sh{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* Tugas */
+.tasks{display:grid;gap:18px}
+.prompt{border-left:4px solid var(--green);background:var(--surface2);padding:12px 14px;border-radius:0 10px 10px 0;margin-block:10px 14px}
+.prompt small{display:block;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:700;margin-bottom:4px}
+textarea,input[type=number]{width:100%;font:inherit;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px}
+textarea{min-height:110px;resize:vertical}
+details{margin-top:12px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+details ul{margin:8px 0 0;padding-left:1.15rem;display:grid;gap:6px}
+.ringgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-block:10px}
+.ringgrid label{display:grid;gap:4px;font-weight:600;font-size:.9rem}
+.verdict{font-weight:600;min-height:1.6em}
+.muted{color:var(--muted)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div>
+    <div class="school"><img class="logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCADQAPADASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAYHAQgDBAUCCf/EAFEQAAEDAwMCAwMHCQQEDAcBAAECAwQABQYHESESMRMiQQhRYRQVIzJCcYEWGFJigpGhpdMzQ3KDJCVXlQkXNkRGU2NlhaKxsjdFR1ZzkrPw/8QAHAEBAAIDAQEBAAAAAAAAAAAAAAEFAgMEBgcI/8QANBEAAgEDAgMGBAUEAwAAAAAAAAECAwQRITEFEkETIlFhcZEGFIHRMlKhsfAjQsHhFZLx/9oADAMBAAIRAxEAPwDf6lKxQGaUpQClKUApSlAKUpQClKUApSqy1i11wfRfHEzMjlmTdJCT8hs0QhUmWrsNh9hG/BWrj0G52FATy+36zYzj8q+5BdItstsRsuPypTgbbbT7yT/AdyeBSxX6zZPj0S+4/c4tytstsOsSorgW24k+oI/cR3B4NfnpqBkmXajZZb7hrWxOkSXlB7H9JbI4pt5QPKHpy+8dvY7lS/pVDfpDaaaf5RlmnOWT7jotGmx5LKlPZDpLeXFOOoA5W9AWeX2wBuFJ+lSNuoOJ5qcPGScH6OUqstHtdcF1nx4y8cmGNdGEAzrNLITJinsdx9tG/AWnj37HirNqCBSlKAUrFZ9KAU2FKUApSlAKUpQClKelAB2pSlAKUpQD1pSlAKUpQClKUAoSAOa8PLcwxrBcUk5Jlt4jWq2Rh9JIkK2G57JSO6lH0SASfQVpLqfrrlWsthlyo13f020gQ4qO7d30E3G/KHBYjNJPU4T26EHpTv8ASL+zQYLa1T9qF93Jn9NdB4DWU5b0rEm57pNvtaU8LcW4SEK6OSVEhtPqVHy1rri1ru91zeZOwu7DMs2cd/1tqddEKdg2pfqi2oWPpXR2DxGw+wlA81SDENNJeU403aF2STgunKil38n0O/6zvpT9V65PgA7eoaGyU9kpH1jeNuttvs9pYtdphMQoUdPQzHYQEIbHuAH/APjXdb2bn3p6InOCO4Tp3j+CxZC7f8om3WaouXC8z1+LLmrJ3KlrPOxPPSOPvPNfObaeWHOGI703x4F3hEOW+9QF+FLhLB3CkLHJAPPSePdsealtKs+zjy8uNCDWPJ7ReLZnMO45pd0YXnDbu9p1LtaS1b7sv0RcUIH0Lx4BeA2V/eJUPNWxmlXtRPoyhnTTXe3N4rlwSgRrkSkQLolXCHEOAlKevghQJbVvwQfLXLc7Xbr1aJFqu8FibCkJ6Ho76AtCx8Qf/XuPSqLzHTeXimLrspskvOdN0lTvzIXf9aWAq+s9b3iCSn1LRBSr7ST9aqy4s3DvQ1RJ+hYII4pWhWl+umV6MY/ClTbw9qVpA44mOze46SJ9jV2DElpR6m1Dt4az0nb6Nf2a3ZxLMMazrFI2SYleY11tkkfRyI6twD6pUO6VD1SQCPUVwkM9ylKUApSlAKUpQClKUAp6UpQD0pSlAKUpQClKxQGaUr4ddaYYW++4httCSta1nYJA5JJPYfGgPuqf1q9ofDtHIaLe8HL3lcsBMHHoJ6n3VK4SXNgfDST24KldkpVVW6ne0/ecqvU/AfZ6TEmyYzZVdczmLS3brU0PrOBxfk2HP0it078IS4e1G4Nj9xut4lydMrlMmXCQ4tN51Yu7ai+6tXDjdqbc8yN+QX1fSEeqBsKyhBzeIonB9ZdNyvN9SI8/V2MvMM2WC5adM7c6W4NmQrkOXFaTs0kDYlrq8RX21JHlqz8V0ykJv7GZ6i3FnIsoabDUVCGg3AtDY+qzDYACUJT2B2HvA35MkwjAcdwSyqtuOwlhbp8SVMePiSJa/Vbrh5Ud9z7h7qg+S65W6CpH5OQ1XAwbwq33mLJbWzJZZSlalOstn6/9m4AT6p223IqzpW8KK5qm4LdPbv3rwLnmWM2cXYTrsyHbQw3Jnx2wVusNOEBCygc9J3HI7etVeMmzZvW3IrtisS6ZPYmFw0yYLDzamPkrkRtxC4oUoK8fqUpfSkdK0k7kHas6rYfj9zyy73W55dacYkTbEiGxMkykofQ8FOBTbjP1lsrac2UPQoSRykV0SqtpuKGCw1ZxFXm8vGIdivUx+FJaiypTTbSY7KnEJWndS3ApQ6VA+VJPu3rjY1Ctcq/mBEtF+kwhPNsVeWIRXCTJB6S2Vg9WwUCkr6egK43qo0XrDIufHK05ljNwlupgqdfXi8qe627HZS2tTLvl6Aop6gdiQdjWWLrgyckt4jajIg2O33ld4YakWiaxKbDj3jORvGBDamlL33KkE7Hao557mXI/AuWHnuJz8mcx+Pdj84olOQwy5HdQlx5G/WhCynoWRsd9lHtUhZdbeZS/HdQ42T5XG1BSSR7iOKonDWrtb8cvhxS4W/Iby8xNfZds2Tqdakyn3CUqXAcCQhSevfqHbo9Sa86zWy8abXK+Qbc7ARdrexGx61xYkVbCbzJlBKmZj6VLKVqb6XeopAPkWVHnaoVZrGUY4J/lWmMpN/k5lptPj2DJHmy3NjutBy33ls/WZlsEFKgr37fE88iscPn5ThWosm4aOx3MRzRsBy8aY3N0uRLqhPJXblqP0ySNyG9/FSPqKWPLV93zJYOI2qI/flzXWT0tv3CPDUtlo+VJddKeGkFSh+/4Gurm+AY7ntnTAv8AEUHmFdcSfHV4ciG4Dwtpwcg7jfbsf41qr2kamXDRjJamivtD4ZrHBVBjldlymMCJ2Pzj0vtKTwoo3A8RAPcgAp7KCTVv/dX5s5zYrhbL7Ekam3OTbbxHWgWXViztKSsLTw23dW2/MT2Hjp84HfxBuKvbTP2oLvi98g6e+0K1Gts99tKrZl0VaV266tHhLpcR5Njx9Iny7nzBs1Vyg4PEkMG2FK+GnWn2EPMuJcbWkKStB3CgeQQR3FfdYkClKxQGaUpQClKUA9KU9KUApSlAKUqi9afaUsOm09GHYrAXl+fS1BmLYYG7haWr6vjFG5Hv6B5iP0R5qAsnUHUfDtL8PeyXNLyzboaNw2k+Z2QvbhtpA5Wo+4du52HNaSaoat5VrHZm7vmc+4af6UyV9ECywgHLxlBB4S239tJO26z9Cn/tDUcuAyLKNUVTczMfU3VIfUsvWF2DFkb7/wClKSehxaT/AHCD0gjzqcVxVw4hps3aL+5mWXXV3Kc0kgB68S0+VgejUZvs02BwNgOO2w4roo28qr02J2IZjGl9wyqzQ4uWWZvE8IjOB+DgkF0kvrHZ+4vcKfePuPbsAgcVdUeNHhw2okRhqPHZQG22WkBCEJHYJA4A+ArlpVvSoxpLESCrdWLLdn7hbr+m6MN2qIlLRYdgy5pjPl0KElDEZQ8RWwCfpPKkf4jUDubdigzoGY6gMvu5dIU3cG7HbWhGkF9p0pblu+YiMh5lLQdaXuCUjbcjarC1P1Mcxk/k7jbrasgebC3HlDrRb2ldnFD7TiuehB/xHgbGiIsWXPvbcKKHp1zuD43ckunrkOq35W6rgqPSrbf3bAADiJwpxUq1WXLBatvyOqhb8/eloj2p2X5DPgi2wnWMbtCUhCLVYAY6AkDYJW8NnF7DjgpHpttUfZhxYzpXHjNNuK+s4E+dX3q7n8TXpSLeI9gt1zVc7epyeA63b2l+JIbYKSUvO7cNdR6elB3UQSeNjXT9dzXbY1ra4g6lu8pNrOHutHhvdZ6rTwLOnThFd1HEl1ydIbgW59h6a+4GWUKXuOsnbzbHfYck/AGvlma0roQp5Dbx8paKwFBQ7p2942P7q9Ox31dhvMgsMvOpcYKzGT5WnHSoALUoghOwCtyOTuOD6cd2uovWRvyV/KNkBBaafTsGApPmSnbynzBXmHJBG/uqqpX/ABF8UlbypJUcaSy91q+m7TXlo9W9DvdKirdVFPv52x09/wCeHU6MiHDlLS5IjNOOJPlcKfOn7lDkfgalNjz3LseejFM5F8iRl9bUK9bvlo7EbsvkFxo7EjfzDk8VHBXq2uxqvVlnu266RHbw083EgWBptb8y5PLT1BKEo/s0AclauOFe7m6uXRhHnq6Fbcdko81XYmcy8DPFzr7bppnSrTvemMMucMOyPlDbHhpS04FdLkYq2cUEJKupP2SQKmGlke+uz7nd5l0vk22PMtMok3cuIXcZQUpT0pthexjs8htCABuE7kepoZxEqJeHozyZduu9qkdDnSS1IhSEjkBQ+qob7HuO4O/Iq+9MdS15SDYMicaRkLKC4l1I6EXBod3ED7Kxx1oHbcKHlPHBKgoyVRPKZX1rfkXNHVFhyosWdBehTYzUmM+gtusvIC0OJPcKSeCKpLKdMJ+J2GXBxyyDMcDfcL8zCZjpD0NZ7v21/lTLo/RHfsQsdrzrG4rGrRjVWJHKUNpdq/lOjNjVd8VuM7UPSNhwIlwZADd1xkk/Ueb3+jAO4B/sV7cFsnat3cB1Ew/U3D2Mlwy8s3GC5wvp8rjC/Vt1B5Qse4/eNxzWrmW6ZpuGQjNMJuisXzJpJSm5R0BTUxJHLUprYpdQrsdweO4V2qo7MnJsX1RM/APA021PP9virjgFkyZG/eEtR6AVH/m6zsCfo1JPFU9a3lSeuxO5+lFKo7Rb2k8c1OmOYnkMNzE88hktTLBcN21LcT9bwSoAq27lBAWn3EeY3jWggUpSgFPSlPSgA7U9KwO3NZ9KAV1rhcYFptb9yuk2PChx0F16RIcDbbSByVKUeAB7zUL1U1gwbR7ElXzMbqllSwRFgM7Kky1D7LaN+fio7JHqRWlOpufZZqo9BuurxudhxaasPY9ptZFE3S98+Rx3jdts/wDXOJ9/hoJ81CcFk6k+0tlGpLl1x3Q6YxYsYtwIveod0JYjxUH0ZJG4UR9XYFxf2Ej61VVgOHS71Bkw9NF3Ow45OCkXbPbk303m/gnzoipJJjMKO+5B6lfbUo+Wpljelc/IE22dqPCt8G0W49dowS1ja3W79d7neQ+ftLUSSe5PYXAlKW2whCUpSkBKUpGwAHYAegqwoWTfeqewyeLimIY7hGNtWLGbY1Bho5ITyt1XqtxXdaj7z+Gw4r2/Wsbmm4qzSSWEQZqN53ljWF4RKvSmkyJW6WIcZR28eQvhCT+r3Uo+iUqqSVrxrFf13jU1FkaUTFsbISUjsqU8kKUfvS30J/bVWSi5NRXU20afaTUSAdFznTHulb1yvE1bkh51IBcfd6SpS+knnhJCUjsAEgcV2oj1tk2+UmPMaVj7LoalSIa0ly8OpeU6yQz47bzK0BwoW43vwCOwJPVbtlwuN0tlrZYktzr04DGX8kcWpEdJ6y604wlawpBStCgEkgrG/bZPpXieJk5uJE8Ru0WxJiW6MXXlJbQnyqWEu+ZKlHcHgcJHA3NeXv6k+L3sbCg8U46trok8Z85N6R6JpyeZKPLaY5nyrY6T770uQl55pthKE9DMZrpUlhGw8vWEhTnb6y9z6b1wuutMtKdecS2hPdSjsBXITua67zanZsJLa4zbvjEoXKdDTe/SfKVkHpJBIT8du1eqqRp8LspdhHEYJtL08X59Wd1tShOrCnJ4TaTe+MvfHU40THZQKYDPWnbfxngUt89iPVfv44+NFThHV0T2zH2/veVNH7lbcHjsdjXafkJiEJmNuRlfrp3SfuWndJ/AmuSOpyYN4jXWn1eeUGGk/EuL2G33bn3CvAr4xvVU7WSXJ4dPf+LyPo0/hXhPy2Fcd/8ANlP6cv8AjfzONKkqSFJUFJI3BB3BFYAlMTETrbNkQJ7YPhyo7ikKG6SnY9JBI2URtv2JrggJCYCUhbS9lr3W1y2s9R3Ug+qD6H3bV2QdjX0iHLc0U5rSSTx6nzOvShPNN6oklqgsaiW+PYbZY0QsttUcMWq3WmFEhQ3W0tAuyZ0p1zxHOok7HfcK7DdZ2i7b0tmaH4MsRbnbpP0UllSXAxIb4JSpJKVp3JB2JSpJI3INcE5KWi3cvkrMlUU+Iph5pLiH2wQpTakq4IPT249243NT3MbbJvmOW/Uu3xrhMZcSmHdnYGNJtVqgkchSFpUfE2OzZcIIPHnTwiqqnmzrfLz1hLb+fzoVFJu2qu3m8xe388uv02LwwfKmM0wiJe22kx5Ct2ZcYHf5PIRw4j7t+QfVKkn1qQDvWvujF9Nq1KfsbqyIl7jlaE78CSyncEf4muofHw01sGdt+K6WnFuL6GmtT7ObiZ9K8LL8NxzOcbXZMmtyJcYnqbV9Vxhf6ba+6FfEd/XevdB4rA5NYtJrDNZrXn+JyrNHjQ9T3bldbREKUWjUm2NFV1swB+jbnISQZDKTtsrfrT9hX2atvTT2msk07lWzE9epDFyss9P+pNQLarx4k5scbuLSPNt6q2C0/wB4nuqpwttt1lbTqErbWkpUhaQoKB4IIPBHwNU3kelc/GY9wfwC2wr1jc9fjXbALoo/I5Sh/exF77x3x9lSSDv2JHlqsuLJrvU/YnJvXCnQ7lb2Z9vlsS4r6A40+w4HEOJI3CkqHBB94rnr87NMtRsp0jZmXrSh+5ZVgkRZcv2CXc9F1x47+dQTty2D/fIBQf7xKT5q3b0w1awfV3EU37DLsiSlOwkw3NkSIiiN+l1vfdPwPKT6E1XkYJx6UpWPTigMjtT0oO1KA0i1BxRtn/hIZsa7sMzpuSY45IxOVc9n2bfcG2SGyG17oUErZWQhQIBcB235rpaCWq13HCRqBPEm4ZlcnXmrzdLk4XpIfQsoW2FH6iRsOB6H3bCrG9tS0zbPiGH6x2Rsm54ZemnypKe7Dik7gn3eIhsftmoVij8Ox+0ZmuP247WTJmI2bWQkdIU1KSPGCR8Fn+FdVm0qqyT0LMPurFfW1KuiDA2rNfPrSgPoAKcSg/aIFad3SS5e7vdJ4bU+7dblIdDaUKWpYU6oBKUp5KvDSNhx2Hatw9z3T39PvrS+0lHyC1fKXGGm/KXFyZaorQ4J87qfMjnsodjsTxvWFSo6dOdSO6izss1rJ+RzWpSHMkyibFbhSk222JZ/0aBMdQSvlbq2ApDbW+yAsvHoCh5W1nYVytNpYjNsIGyW0BAHPAA29a7FsYdu0jPo6j84Si4mWht2Yu7ulKGUkvDwyhjZI7zHjukHZtJWSa4gUqQlQHcb7Ebfwqj+E5qdW5b/ABdzqnpy50a0xnO2mc4O+j1MbcVkSjBcanpG5iuokbe8IUFH+ANN9zxWFIStJbX9VQKT9x4Nevr0Y16UqUtpJp/XQ6IycWpLdFxLtVocUVm1wVb8hRjo5+Pauld0W6z4/OujVvhoXGjrcQpLCAQoJ8ux29+1MUmLn4RbJDp3cDAacJ/SbJQf4przNQJHRircQHYy5TbZHvSklxX/ALAPxr8vWVlWrcRhYSby5qL98M+lV60I2krmK/tyvbQrtptTUdtpR3UhAST7yBzX16UPPelfqZRSWEfNB681Y+ktis+TaMZPj91hWiU6024iGm55c5a/OnqCEMxNlIA323eUOlZ4PY7Vx3I++rq9m9l1GH3+5eI8zEfU6HHTipubBbKlblcruW+CFsJ7bEgjc1ScaxywfXLKria71P1f7f8AhTFiubtuvVjva1tl+DcY7jxa+qCHQ26kcnjZSx3IrcFSOlakfokitK5xSbTcBHdtriBIcS0bWlQiAB7ZIjlXJa7dJPO21bqrP0qt+/Uf/Wt8pc3LLxSMbp55ZeKMelYG1ZIr5qDkMmg7c05JrNAU9rraLfZ8db1GsS5dqzqHJYi2i52xzwn3nnFhCWl+jiCCrcHfgbduK9PTHE4o/wCElfZxyPHgfk3YEKyV22EsR59wcZCXD4SdkJBcdB6AOnqaJ235rGTTIl59pXE7ZcFb2LC4MnN71tsQAwk+Ak78crAO361Tv2KbHcJenGTas35BN2zW8vTFOKHJZQtQG3w8RT34AVS3jTqvBPQ2goe1KelcpApQdqUBF9SMQj59pLkWGyUpKbpAdjJKuyHCk9Cv2VhJ/CtAMYv0hnSPTLOpwLdxwS/P4VfUknrTCkndkq/VQolA+Ir9Jz2rRDMMGED2qdWdG/M1A1KsKrzaE7AJ+cGup9G3x8VEgcehFTGTi00Si4yCFFJ23HHFKh2lOTrzDRuwX19RMtcYMSwe6X2vo3Afjunf8amNeijJSSaIMbVnalKkGUqCFpVtwCCa1DVGdsebLt6FPtPW27vxUrjrbbdSPEWElC3QUI3SpPKx0kHY99627rXHWywOWzUdVzaaBjXyOHEknZPypkBKkk7H6yA2rbY79KuDzWqtSVanKk/7k1rtqjptZYnjxPJtcN+yavXO1X5p2LAvcZqWlV6RH+TrdbV0BxUSEpTc5wFaA0ykgKWvqUnivElwXrTd5dmlMvMSIbnhqYkFvxm0kBSA4G1FKV9Kk9SQeDuPSpFeMcuf5H2fUfELNdGHraoSVS7Li8S2lTRSUvKS808oFXQVdKvD332PFe1kVjYyzEIeaYszFUGktxn4NvWXWWnHCFNw2lJQVzJZLpcedJ2BG3v2+X8A4/T4dfxnVkuSp/TnhYUZx0WU9srC8H5NYlZU+6yvqU3B5G/4jYj7x6V8LdabHU46hCd9t1HYb/eeK+0qSxnJuyT7TyX12u4W9SuWJHipH6jid/8A3JXXnZ/LLl/gwUkFMeOp5Q9ynFdI/wDKhX766eDTEM5sGA4kibDWhOygeotqCxt7+CuvOyKc1Jy67SlPNpQiR8mClLAGzSQjbf7+o7fGvlFjwVQ+Mas8d2KdT/skv3b9j01a9zwiEM655fbX9sHSpXwh1pw/RuoXxv5TX0SBuSQB7zxX1hNNZR5pPJwTnzHt7riBuvbpQNwN1HgDnjvWz+nUS3YZoYHmpsVx2NCVcHZuP5BKlS2kBA/0xqIpCWVFCekuNJ3B2O+/1apTS3G4+TZc1fZ1zhQrba3gthbl0bhPJfGym5G6mXtmgQU9RSBvvzwRVx695bPtunZsDsyY7cZclLHgu3tv5Va3yjxESY7qEhb0V5kuoUNht9XykkV5jiNf5isoQ1S0Xqyjuanb1sx2Wi9Xv/g11s0OTfshs0B9Zdfud2Z8VXgpZBCn/FWUtp4QnpSohI+qOPStwFK61le3ck1rtotjwuGpCrshrpt9gjFtv3fKHk9KQP8AA11H/MTWw/NWcsJ4XTC9jO6ac+VdFgzWNhtWad6g5jA7Vnj7Sgkeqj2HxrPG1QPWTJH8X0VvcyDubjKbFugoT9ZT758NIHx2Kj+FYzkoxcmCmcgvMifonm+WwEKXedUMmaxeyI2PWbdFUOop/VWvoQfvr9CsCxOHgmmNhw+AE+BaoLUQKA+uUpAUr71K6ifvrT/B8Kbuftl4BpcwlLtl0mx5uRM6VdSFXFaUuLV7ty862f8ALNbx+leek3JtslilKVBAHalKUArVX2yoErF16fa4WlkKmYlem0ySkcrjuKB2Pw6kdP8AmmtqqhWrmEt6i6H5Phi0hTlxgONsE/ZfA62lfg4lBoEavYUmHjOu+oGEQHEG0znmstshRwlcWYkKUED3BZAqyq1pxXJXDp/pBqTK6kScenv6fX4rV5ksOeeKVD0CQrbc+qa2XUCCQe44NXFlPmp48CWYpSldhAqL6gYg3m2DSLOHUMTUKTJgyVjhmQjfoJ/VO5Sr9VRqUUqHqSnjVGs2nDjCMomYtdsehOSpDim3I71ji3CSzIT9dClvuICUp4IPm3BBGwI39iBLuWi2fJs97dlwcVuCltsXKSpgLtba+tyQiPGjOuBtbyuhKXDt09tu20z1S0xGUj8oLEwx89tICXo7mwbuLafqoUTwlxP2Fn/CeNiKD+Txj8pjLhBpaFFiTGeZ8NxtXq24gjcH4H7xuOa8fxD4KhxO7q1J1UqdRd6HLl8y2lGWVh+KcZLdNNMtqFVVVp+JHr3+Zbrjk8uVj+PotcBakMwbWwkdSUJSG20q236nFnknc8q23O25/QbS3AI2DaNWfEZjbMmQ2z4k5SkhSXZDhK3T8R1KIHwAr80Y1zybAb9a8gxVhi6/IJSJDECewqQlpaQSk7hQKkJOxAJ4ITzxtVpwvb21htUhP5R4LjcljfzAMyIaz9yitY/hV3c0VbUadpTTUKaS1efLV9X5vV9TnvHJtRxojYLXzSvEbRFiZza8as0JhLojXYtxENoKVnZp9Ww2BSvylXqHee1SjQ3SnF7VgcPKrji1qN6uoExLrsNsuRmFD6FpO48uzfSpW2x6lK3qo1e2LpjqrpBkWM36I7i15lW9xtqNcyl6LIUQPKh4Dbf4LSn4b13tRvb00/xic9asCscrLnmSUGb4oiQgR+gspKnB8QkA+hNUcbGEbuV3nVpLy9frovoRK+qStY2r2Tb/ANfv7lme05gy8n0VXdrcxvOx5z5wQhCeVsdPS+gfsefb3titE5iW1oYQ50rYcfbS4DylSCfX3gnp/A1PZnt2a13krTaMIxhqMrdPR8jkStwfQqLgB/cKqiBGul9hNP31pEGN1E/NkdCmwdlEgLJJPQONkg9gNya9LYSnOlOgk9Vo/DOhhCEqtCpQ25k0n4ZWDaPTD2lLhg+KsYzltjfvdqhthqNKhrQiSy0OA2tCyEOJSNgFdSTsNiD3qlMuvz2Z6hGZZ0TJ0ML+asZgSY7bT6Y6llbbJUjfdKSpYCiT0tp37VH1Q45eYYREflvvOBuPEbK3lvOHslDZJBP8B3Ow5rYXTHTRWMD8o8h8J3IH2y2htB627e0ru2g/aWeOtfrt0jyjlbWM7WWakk5dMdPNlfYWlzYwxdVFOS2wv1b6+3uSbBsTYwvCItkQ6mRJBL8ySkbfKJC+Vr+7fYJHolKRUjpSuxLBtbzuKUpUgVV+VSId+9pHDrBcVH5jxSNIze+EDqSluMk+CFD4rA4/Wq0O523A+J9K1hyG+ypejWoWawUeJddRsiZw+xIG/WYEYjxCn9VaulB+Jrivp8tPHiEbD+xbZpt0w7LtYr22r50zS9PSQpY5DDa1bAfDxFuj7kito6jOnmIxcC0qx/DoYT4VqgtRSpPZa0pHWv8AaV1K/GpNVQBT0pSgFKUoB61g8is0oD8/8qwf5v151u0PZb8NjMLX+VOPpCO01gmSlKPdufHRx6IqzNNspTmmklgyUHdyXDR44/ReT5HAfj1JP765va+jyMIzbTPXm2tHxMeuyYVwUk7FcZw9Wx+GweT/AJtRXTpiPh2rWoel8daTBh3EX2z9J3SqDMSHE9J9QkkD8a7bGfLU5fEllmUr6rBFW5BilKUAqH5ppxYM0SJUgOQLs2joaukQDxQkdkLB4dR+qrt6FNTClCU2nlGsOQ6dZpjC1Kk2hd3hJ5+X2htToA962f7RH4BQ+NRNuVEldTDb7Dx7LZJBUPgpB5H4itygSDuDsRXhZHj+H3OC/Pyuy2eUww2p12TOjoUW0JG5UVkdQAHxrbG4nFa6o7Kd7NaSWTTO8YJaLiS6w0be+TyplPkP3o7fu2rsWnDLLa0JWmJ8rf7l6QOs7/BPYVYeXTtLWYklOHYQ46tCFKEt+bKiscAndDSXAtQ+/oFc+Ky9JHI7TWZYWuK6UgqmpmypcU8b7qQXOtsfgofGqpcW4d22Fy83rp74xkvHwa+jS+Y+Vlj019cb488EMemxYziWX5LbbiuENdW61fAIHJ/AVLcd03zbJlJcZtZs0FX/AD67ILZI97bH11ftdA+NbC2HHcWssVt7GrJaoLbiAtD0KOhBWkjcHrA3IIIPevY9d/WrWVecttCjnezekVgiGFacY9hKVSYiXZ11dR0PXSZsXlJ9UIA4aR+qnbf1J71L6U53rTscbbbyxSlKEClKUBCNX8mfxPRe+XOECqe6yIMJI7qffPhoA+PmJ/Co3hWENXD2vdNtJGQHrTpVYET7iEqCkquLgS64r3bl1xk/sGu5l7kHIPaJwjGbk4fmTHGn81vmw6kpZipJaCh7isf+apt7FtpmXrG8z1nvbJFzzO9OuoUtPIYbWrYD4eItwfsD3VUXs+apjwJNpR2pSlcZApSlAKUpQClKUBXuueDDUf2esqxFLYXJlQVuRBtuflDf0jX/AJ0JH4mtLMTylyVZdGNUHXD1dD+nd+cUNulSPPDUs+/pKeT7q/RU9q/PHJML+Z9Qdd9EIyAyqWwjN8YHPlfjnx+lse8oWtH+WayhLlkpLoSjYTkd+DWCeK8LCcjazDTiyZO0oEXGG2+rb0WRssfgoKFdy5X2yWZURN3u8KB8re+TRzJdDYdd236ATx1bc7V6HmTWSD0KUIIOxGxpUgU49TsO9KrbWfILtj+I21y0XCbDckzFMOKhDdxaPCUrbfbcDcDkbffWi5rq3pSqyWiOqytZXdeFvBpOTxrtqRi/a6zH2CMctjNujqAKZtyIW4Un1DYPQn9pSvuqCt6zZVJwWdYrm+3fXLjHdjJWqOW3WyoKHDjYCDsOdlD071CWYLMe5svxbG8EJZUj6QJCuoqTt9ZRPYGuZ124zxElRYbSUtOKUPlD+2/lUg/VB25NeAnxi7nLm7TT6JddMan2Gl8KcPhSVPsu944nJv8ADmSemMeGMeTOW4v3B21yizEZZT4KyVSHN1bdJ7JRvz95rLS7mIAQ/EZd6m9guK5seU/or2/gTXDOTel2uV1O21pHgL3CUOOHbpO/JI/9K5WfnpEdv6S2vDoTsClxs9vvVVRhcmNP1PV80nXb7+3hHxfT/WSXXHWzLF4/Ct9smNWD5GmPGUlqP1uKKOhKupx0FPbckJA++p5juuEtPgsZJa2pralJR8vthCFDcgAqaJ6T35KVD/DVJtP3CC28qRAQvx5HV9BIBAK+lIGygPWuv8kbVc3pb9kkJ6vDLa2QnqSU77ndCt++xq4pcZu4T53PT6PO2mNMHkq3wpw+dHso0sS2TxOLW+G33s506Y8MG8BGyinjcHbisVAdIMguuR6fvTbxOlTJLc91jxJSQlwJCUEA8Df6x5PPNT6voFCsq1ONWOzWT49dW8ratOhN5cW08baaClKwSAklRAAG5JOwA99bTnM0A3IG+2523NefZ79Zcggrm2K6xLjGQ8uOp6K4Fo8RG3UkEcEjcb7e+o3qzlCsP0Zv97YVtLEYxoiR3U+79GgD47q3/CsXJKLkCmMiyORJ0l1Ozq3Dxblnd+Ywiwjc9ZhR9i8U/qrPSk/E1v8AabYfHwDSTHcNjBPTaoDUZak9luBP0i/2llR/GtOcJwVE72q9K9HkpU7b9MrEm8XdPBSbi70vr3958Vxgc8+U1veO1eelJybbJYpSlQQKUpQClKUApSlAK1P9qlsafa5aV66NtK+Swbh8y3dSR9aM51HY+8dCpA594rbCqr9o7BhqH7MuWY+2yHZiYZmwxtufGY+lSB8VdJT+1QlGvulsEYXlmeaTKUot47eVyLf1HfqgSh4rJHw5/jXh6lYFAGWqu7EJ12NfAVT2GB1lx5hsrK0oO4LhZQ44njcrjhPZ1QPj4nlIn3TR/U3xx03+0u4Re17bf6ZEO8daz+ktHQfuq3szlqtWMN5EhJK7HOiXgbe5h9CnP3t+IPxNWdN9pb46odSO6V3d9WNRLJMkolN/JlSLbMQorRIjoeUw4hKjyoNuo2G/PhuM7871YQBJAA3J7AV7uo+m+P4jpJFvOHIttnRi8uTdmmpUkMR3GJC1LlRvEVw2lfXujfypWhodhXh4hgV/1PisXbImLnjOHupS4i3LJjXK6JI3+mKT1RmT26EnxF+pQOFKN5GNPvbogxVcax2xm5WCytuTno7gnqDLbFvenLfWWV+VLbXm3CUqVv24qxVYNeIU67taX5G1mlvtEswptkusgolwnghKyyzNI6XCEuJ8j25G+xcB4qB5O3Y8wu1lx3JUSLHMhzzKfst7Q5BkPjwXGwGlBQDnmWk9Ta1AgHnms51KV1TdN9ejN9tc1LarGvReJReU/MrC36douUiYxFy+B4sJpx+Q27bZDZbS2soXuCruFJI278V57OC2+LHfYGe2pRiWpu9up+bZHUmI6olC9urk8/VHI3G45q1W8Bym2ZRdZtsn2VUa5tymHm5iXw4028+pxJR08FQCtjvxuK8JejF8NtedRlLJuD8Ry3OtLbPyURzFbYbCdk+J1AsNKO56frbAHmq7/g7RLCpfq/uegfxlxhyUu3efSP28iL5TpVJx2yF275VD6JJVGbbh2qTJeWrw1KV0toUSQlCVKJ9Ak150bD7W7c2LUxn9qdkuT2bS2hNtkeZ9xnxmxv1fVKOersO3erky/FMlzHBo9vnjGjcG5JecbUJAjkdKkoU24kh5pxJUFBSTzsUng1E16M35vLUZExlEV6c0tEhDkltfnfQG0peXt9rZK9/8VJcDtE8Rpaer+5C+MeMZ5u3efSP2IOnB7ZcYsFbGoNnU3KuL0FhSbe/55EbdxxvlXHDZ2P2uNt9xXovadx40e0uyc7sjIu7RfhJciPBTrYZLyllPVulKUDck8DgdyKlA0MkNW0WhvJlvwkoD7D0hsCRHmCIWA6goSE7BSWVc+YhKgSSd6mz2FOSrBi9uWqC69aGktPqWyVh5HyNxhSUjg9JUsK2JHAPrtRcCtGtaX6v7kr4y4wnzKu8+kfsefo/ChQ9P3vkN0TcEOznXFLEVyMptXSgdCm3PMDsEq57hQIqf1XOAoYxW2ycZhuPZTkb8xcl+34/4s9TRKUNpStxw/RgJbT5nlp2327AVY1mwqZkeVosGdZracckON+MMSstzQq5vN7bkvP7hSU7dwwkf/kNWUKtO3pxprotjz1xXncVZVqrzKTbb83uKq7Vq7fKrevHhNVCtja4/zvLSnq6fGKy0yE/aJQy86Ufa8NtJ4c2Ni5vjV/0hiSLmhm55RhjaStDyVByfavc28pRHix+wDxPU2P7TqSCsS6xadY/a9FmckztiHdJ8acc0luRXetj5S00oshCh/aNtNBCEnsegK25rXXu4yhiPU0lDaX4HFg36RkM63KjSbaXLXDjLcKhDVvu+kc7boUfBKu6ltvLO5Xx2s1+QZNr5geGXFY+Z7St7ML4VDdKYsNJUgLHuKwR+NTDCI8hnTuyiXuZb8VMuQVd1PP7vOE/HrcVVB5Tk7rmm+q+okEKXLyq6MYBYOlWylxmvPJKR6hewT96qV/6dBR6snqX77GVtlZFBzvW68MdM/ML06pgqHKY7aidk/DrWU/5YraiohpZhjOnujGNYWylINsgNsOlPZTu3U6r8VlZ/GpfVYQKUpQClKUA9KUHalAKUpQCsKAKSCNx7vfWaUB+cl4xKVj51y0WhJW3Kx+a1nuMp37JZUFrCfefAcQOP0DV5Wyfbs801jT0nrgXy3br6fRLzeyx94KlD8K6XtJxo+nvtU6Yawuso+aZzi8avm6N0qYcCkjr9/wBG66f8sVG9HI7uLJyzSmY4VSMPvb8Nnq7riOKLjCvuIJ/fXdYzxNxfUlk2uWYWG+aaYzaMruV7tmd4qttbEZmzP3ONOkNJ8NLxZCfCkNrA60nrSptStwpCk71M7TrpKmYmq2ZZbY+CZZKjKbgSrovxrU5JUkhvd9B2QerYlpZSr0SV968XqV0FIUek+m/FcT7DEmK5GkstPMOpKHGnUBaFpPcKSeCPga3OwjrhkELh4MNGMtuzt4xjLNR5zMWHNxdJU8+iZd3flDs5xtKPo2vOlLilrBUlJASVEgH7ja0SJGjr7Oo35MZhLuuZv2eK1kcU2qAxHbYbdeKw42pbKGlKU2lTiSoFSOrvxIbPFyPDCFaf5M9aoqf/AJLPSZttPwS2VBbH+UtKR+ia86fLtLt+RfbxjuTYNeWlSlG+4eW7xCdVKKDIW9GcaUvzlpsq3ZP1R5q46lrUhuskklwjT/Fs20zYzLC7pk+CMqU82qAmYm5QQplxTalNpeDiVskoJQtopCkkEbV4tkRdMiU8nC9T9Msw8BsvOsuOu22S0gbbqcQlTvSBuOShI5q0NHL7g0HEY2G4tndlvFutzbcW2xhI2noaS2kK+UIWoKKyvrPCEAJKUgcVVGQ6XajX7GpGKpwuGp3Jb7db5kciVOTGQqEZG0aCJTaXFAuJTHWQAR0slJI3rCNepDZgka8W1baOysCtMn9aLkKdj/8Auwk18oxfVt54MpwayRVqBIMvIx6d+G2FGqmyCDq+7hsnL4Vkv4u1t05j45eLQY7qTP61zYz62uPM80tDEhPTyUKP6Qr2J1jvVnyuVKkadTMgzpGQwptpnybZOeDtuS0wlpEeWytKIwa2dDiHVBJ2V1JV11t+cq+IwSWeqZAjzHMj1b0yxxENAckt29Tl2kMpK0oG6CtvbdS0pHkPKgNjvXUn/wDFe3p3PymXcM21PfhXKLbHcddDlrUp+QtAbSIYbZ6gpKwpIWFBQ4BNdHHdKswGnuYaYIxvKorT6rpCt8xUa2QrYx0yFvQpXip2lPK3QwQTv09R42AI57xh2H2cv2fL9W7d833edbb3dLU7Kdud6TMjFBcYbkNL8dbKgnpSSOpvbybA7VqlXqT0bB95dq3fbHDmWXSrG4TOHS8ebyLH7ljMTw32FsugPofi/wB42HEobeCEhxtD25SdlEedYbfnmQ4t896cY/MZn367u5PaMyj/ACEsLZlLDimbg67vIR8n87Km2h9IhCUhQBO0gtUvF8du6Z2kuk0qIpt9yVEnZLKchRYbjjQadcYi7re+kQlJWClAUoBRO/Nctztl5ypARneRyLzFHazxEfIbYnnfYsIJU6B/2q1j4VnTtak+mAWDl2vNqgw5kDBbM/nd2jpKXhbCBBZWO6VyFeVShz9E31r422FVfHvdrGjN206xW+XG53HJZBTLitWaRbbdj0V0j5Shlt5O7SOjxAlsrUVOObgJTuBImWGIsVuNGYaYYaT0NstICEIT7kpHAHwFcpUpQAKiQOwJ7V2KwisZZBEtTsnThekGQZCwOh2NEUiKgf8AWr+jaSPuKh+6q/wvBVXH2kNH9FnG1OQ8AsoyO+pKBzcH+mQsL95C1x08+m9e7qA3GyrWXT7TyW8hFrExeS3sqPlTChJLnm+ClBQ/dUv9jeHJy6dqHrpdmOmXld5cai9W+6IzZ6ulPw3WlH+UK576fNU5fAk2sHalKxXGQZpSlAYrPO1YrJ7UAHalKUApSlAKUpQFN+1Ngxz72V8ptrDJcmwWPnSJt38RjzkD4lHiJ/arWjHXclzD5g1fwbL9PYtzvGNRrVkMDJ7sY61S4qy0HghPPmQhJBJ7H13rfhxtt5lbTqErbWClSVDcEHgg1RC/Yz9nNaypWAcn/vKV/U7VMZOLyiSow5rYB/yt0G393z87WS5rUR/yv0GB93z67VtfmY+znvv+QH8ylf1Kx+Zh7OW+/wDxf/zKV/Urd8zV/MNCpevWrfnLtBv9/O0Dmte4P5XaD/7+dq2x7GPs5D/6f/zKV/Up+Zj7Of8As/8A5lK/qU+Zq/mBSl2s2p99SE3q5+zrcthwZl1U8R9xUCR+Brow8W1ZtY2see6UWUfoWrOrhHQPuR4pSP3VfH5mHs5bbfkB/MpX9Ss/mY+znv8A8gP5lK/qVhKrKW7GSlej2km2+mLr3gDQ9ysuDv8AFbKj/Gnhe0Y8NpeumAPj3DM1s/8A8mkmrq/Mx9nLf/4f/wAylf1KfmY+zn/s/wD5lK/qVhkZKGlYjqZcl9V8ynRi+K/75zKfNB/ZccKf4V6tsg6sWeP8ntF59nq3NeqIV3UyD94QBvVyfmY+zn/9gfzKV/UrH5mPs5j/AKAfzKV/UrZGtOP4XgZKl8XWrfjLNBv9/u1ku61n/pdoMP8Ax52rZ/Mw9nPff8gP5lK/qVn8zH2c/wDZ/wDzKV/UrL5mr+YFSeJrYSd8u0G/387WC5rZtunL9Bj/AOPO1bn5mPs5f7P/AOYyv6lPzMfZy/2f/wAylf1KfM1fzA1oz9OQ4bgeeZvkuU4ZdcuyaBExK0QsVuPyoR47iyqSSD5k9SUBO/PKviBW7ukWFN6d6H4xhqUBLlugNtv7fafI63T+LilmoNZ/ZG0AsWQwb1bMES3MhSG5LC1T5KwHEKCkkpU4QoAgHYgjirurS228sMUpSoIFKUoBT0pSgP/Z" alt="Logo SMA Negeri 30 Filial SMAN 19 Kab. Tangerang" width="60" height="52"><div class="kicker">Biologi SMA · Kelas XI · Bab 3</div></div>
+    <h1>Jaringan Tumbuhan</h1>
+    <p class="sub">Dari jaringan meristem sampai sklerenkim: pelajari, coba diagramnya, lalu uji pemahamanmu.</p>
+    <div class="stats"><span class="stat">Skor kuis terbaik <b id="bestScore">–</b></span></div>
+  </div>
+  <svg class="stem" viewBox="0 0 120 120" role="img" aria-label="Penampang batang dengan berkas pengangkut">
+    <circle cx="60" cy="60" r="56" fill="var(--ground)" stroke="var(--line)" stroke-width="2"/>
+    <g id="stemBundles"></g>
+    <circle cx="60" cy="60" r="12" fill="var(--surface)" opacity=".7"/>
+  </svg>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Menu belajar" id="tabs"></nav>
+
+<section class="panel" id="p-materi">
+  <div class="panel-head"><h2>Peta materi</h2><p>Pilih satu jaringan untuk membaca ringkasannya.</p></div>
+  <div class="groups">
+    <div class="group"><h3>Jaringan meristem</h3><div class="chips" id="chipsM"></div></div>
+    <div class="group"><h3>Jaringan dewasa (permanen)</h3><div class="chips" id="chipsD"></div></div>
+  </div>
+  <div class="card" id="detail" aria-live="polite"></div>
+</section>
+
+<section class="panel" id="p-lab" hidden>
+  <div class="panel-head"><h2>Laboratorium diagram</h2><p>Ganti pilihan untuk melihat perbedaan susunan jaringan dan dinding sel.</p></div>
+  <div class="card">
+    <h3 style="margin-bottom:12px">Tipe berkas pengangkut</h3>
+    <div class="seg" id="bundleSeg"></div>
+    <div class="lab">
+      <div id="bundleSvg"></div>
+      <div class="lab-text" id="bundleText"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3 style="margin-bottom:12px">Dinding sel jaringan penyokong</h3>
+    <div class="seg" id="wallSeg"></div>
+    <div class="lab">
+      <div id="wallSvg"></div>
+      <div class="lab-text" id="wallText"></div>
+    </div>
+    <div class="tablebox"><table>
+      <thead><tr><th></th><th>Kolenkim</th><th>Sklerenkim</th></tr></thead>
+      <tbody>
+        <tr><td>Dinding sel</td><td>Primer, menebal tidak merata</td><td>Sekunder, tebal dan merata</td></tr>
+        <tr><td>Penyusun dinding</td><td>Selulosa, pektat, hemiselulosa, air</td><td>Selulosa dan lignin</td></tr>
+        <tr><td>Letak</td><td>Bagian muda yang masih tumbuh; tepi batang dan daun</td><td>Bagian yang tidak tumbuh lagi</td></tr>
+        <tr><td>Sifat</td><td>Penyokong yang masih lentur</td><td>Lebih kuat dan keras</td></tr>
+        <tr><td>Contoh</td><td>Batang seledri, batang bunga matahari</td><td>Serat abaka (<i>Musa textilis</i>), tempurung kelapa</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="panel" id="p-kartu" hidden>
+  <div class="panel-head"><h2>Kartu belajar</h2><p>Ketuk kartu untuk membalik. Pilih “Paham” bila sudah hafal; kartu yang belum paham akan muncul lagi.</p></div>
+  <div class="deckbar"><div class="bar"><i id="deckBar"></i></div><span class="count" id="deckCount"></span></div>
+  <div id="deckArea"></div>
+</section>
+
+<section class="panel" id="p-kuis" hidden>
+  <div class="panel-head"><h2>Kuis</h2><p>Sepuluh soal acak dari seluruh materi. Jawaban langsung dibahas.</p></div>
+  <div class="card qbox" id="quizArea"></div>
+</section>
+
+<section class="panel" id="p-cocok" hidden>
+  <div class="panel-head"><h2>Cocokkan istilah</h2><p>Ketuk satu istilah di kiri, lalu ketuk ciri atau contoh yang sesuai di kanan.</p></div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:14px">
+      <span class="count" id="matchInfo"></span>
+      <button class="btn" id="matchReset">Acak ulang</button>
+    </div>
+    <div class="match" id="matchArea"></div>
+    <p class="verdict" id="matchDone" style="margin-top:14px"></p>
+  </div>
+</section>
+
+<section class="panel" id="p-tugas" hidden>
+  <div class="panel-head"><h2>Tugas mandiri</h2><p>Dua kegiatan dari buku. Jawabanmu tersimpan otomatis di peramban ini.</p></div>
+  <div class="tasks">
+    <div class="card">
+      <h3>Cari Tahu: letak stomata</h3>
+      <div class="prompt"><small>Soal di buku</small>Coba kalian pikirkan, mengapa umumnya stomata terdapat di permukaan bawah daun? Keuntungan apa yang diperoleh tumbuhan dengan adanya stomata di permukaan bawah daun? Apa pula keuntungan yang diperoleh tumbuhan teratai dengan adanya stomata di permukaan atas daun?</div>
+      <label for="t1" class="muted">Jawabanmu</label>
+      <textarea id="t1" placeholder="Tulis jawaban dan alasannya di sini"></textarea>
+      <details><summary>Petunjuk</summary><ul>
+        <li>Permukaan atas daun biasanya menghadap matahari langsung. Apa akibatnya bagi penguapan air?</li>
+        <li>Ingat fungsi stoma: jalan pertukaran gas antara jaringan dan lingkungan.</li>
+        <li>Pada daun teratai, permukaan mana yang menyentuh air dan mana yang menghadap udara?</li>
+      </ul></details>
+    </div>
+    <div class="card">
+      <h3>Menaksir umur pohon</h3>
+      <div class="prompt"><small>Soal di buku</small>Carilah pohon yang baru ditebang, kemudian perkirakan umur pohon tersebut berdasarkan tahun yang terlihat. Bandingkan hasil perkiraan kalian dengan hasil perkiraan teman kalian.</div>
+      <p class="muted">Hitung lingkaran tahun pada penampang batang dari tengah ke tepi, lalu bandingkan.</p>
+      <div class="ringgrid">
+        <label for="ringA">Hasil hitunganmu (tahun)<input type="number" id="ringA" min="0" max="500" inputmode="numeric"></label>
+        <label for="ringB">Hasil temanmu (tahun)<input type="number" id="ringB" min="0" max="500" inputmode="numeric"></label>
+      </div>
+      <p class="verdict" id="ringOut"></p>
+      <label for="t2" class="muted">Catatan: apa yang menyebabkan hasil kalian berbeda?</label>
+      <textarea id="t2" placeholder="Misalnya: lingkaran sulit dibedakan, mulai menghitung dari titik yang berbeda"></textarea>
+      <details><summary>Petunjuk</summary><ul>
+        <li>Pada tumbuhan berkayu, xilem yang lebih tua berhenti mengangkut dan menjadi penopang batang.</li>
+        <li>Xilem sekunder terbentuk dari kambium vaskuler, sehingga tiap lapisan baru menambah diameter batang.</li>
+      </ul></details>
+    </div>
+  </div>
+</section>
+<footer class="note">Dibuat sebagai alat belajar pribadi. Bukan terbitan resmi sekolah.</footer>
+</div>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)};
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+/* ---------- Data ---------- */
+var TOPICS=[
+{id:"primer",g:"M",n:"Meristem primer",tag:"Jaringan meristem",
+ pts:["Berasal dari jaringan embrional dan merupakan kelanjutan perkembangan embrio saat perkecambahan.","Terdapat pada pucuk batang dan ujung akar.","Bertanggung jawab atas pertumbuhan primer, yaitu pertambahan tinggi atau panjang batang dan akar."],
+ kw:["embrional","pucuk batang","ujung akar","pertumbuhan primer"]},
+{id:"sekunder",g:"M",n:"Meristem sekunder",tag:"Jaringan meristem",
+ pts:["Berasal dari jaringan dewasa yang mengalami diferensiasi.","Bertanggung jawab atas pertumbuhan sekunder: pertambahan diameter batang dan akar serta pembentukan jaringan pembuluh.","Contoh: kambium gabus (felogen) dan kambium vaskuler."],
+ kw:["diferensiasi","diameter","kambium gabus","kambium vaskuler"]},
+{id:"interkalar",g:"M",n:"Meristem interkalar",tag:"Jaringan meristem",
+ pts:["Terdapat di antara ruas-ruas batang rumput-rumputan (Poaceae/Graminae), paku ekor kuda (Equisetum sp.), beberapa spesies Polygonaceae, dan Caryophyllaceae.","Pertumbuhannya menambah panjang ruas batang dan menyebabkan terbentuknya bunga."],
+ kw:["ruas batang","rumput","Equisetum"]},
+{id:"dewasa",g:"D",n:"Ciri jaringan dewasa",tag:"Jaringan dewasa",
+ pts:["Tersusun oleh sel yang tidak lagi aktif membelah dan sudah berdiferensiasi sesuai fungsinya.","Ukurannya relatif lebih besar daripada sel meristem.","Dinding sel menebal, vakuola besar, sitoplasma lebih sedikit, dan memiliki ruang antarsel.","Terkadang selnya sudah mengalami kematian."],
+ sub:[["Pelindung","epidermis"],["Dasar","parenkim"],["Pengangkut","vaskuler: xilem dan floem"],["Penyokong","kolenkim dan sklerenkim"],["Lainnya","periderm dan jaringan sekretoris"]],
+ kw:["tidak membelah","diferensiasi","vakuola besar"]},
+{id:"epidermis",g:"D",n:"Epidermis",tag:"Jaringan pelindung",
+ pts:["Berasal dari bahasa Yunani: epi = di atas, derma = kulit. Jadi, lapisan terluar sel tumbuhan.","Sel berbentuk pipih dan tersusun rapat.","Fungsi utama: melindungi jaringan di bawahnya. Dapat disamakan dengan jaringan epitel pada hewan.","Modifikasi epidermis: stoma (Yunani: mulut), jalan pertukaran gas yang umumnya di permukaan bawah daun; dan trikom, struktur tambahan berupa rambut pelindung, kelenjar, sisik, atau lidah-lidah (papillae)."],
+ kw:["epi + derma","stoma","trikom","pelindung"]},
+{id:"parenkim",g:"D",n:"Parenkim",tag:"Jaringan dasar",
+ pts:["Disebut juga jaringan dasar karena ada di hampir seluruh bagian tumbuhan: akar, batang, dan daun.","Sel berdinding tipis dan fleksibel; dinding mengandung selulosa, pektin, dan hemiselulosa, umumnya tanpa lignin.","Bentuk bervariasi, umumnya polihedral atau isodiametris, dengan ruang antarsel berisi gas.","Memiliki vakuola tengah yang besar dan sel hidup yang dapat tumbuh dan membelah.","Karena mampu berproliferasi, parenkim menjadi sumber sel baru untuk penyembuhan luka dan regenerasi."],
+ kw:["jaringan dasar","vakuola besar","proliferasi","regenerasi"]},
+{id:"xilem",g:"D",n:"Xilem",tag:"Jaringan pengangkut",
+ pts:["Pengangkut air dan garam mineral dari akar ke batang dan daun. Disebut juga pembuluh kayu (Yunani: xylos = kayu).","Komponen: trakeid, trakea, serat xilem, dan parenkim xilem.","Pada tumbuhan berkayu, xilem yang lebih tua berhenti mengangkut dan menjadi penopang serta pemberi kekuatan batang. Kayu sendiri sebenarnya adalah xilem sekunder."],
+ kw:["air + mineral","trakeid","trakea","pembuluh kayu"]},
+{id:"floem",g:"D",n:"Floem",tag:"Jaringan pengangkut",
+ pts:["Memindahkan hasil fotosintesis (gula) dari daun ke seluruh tubuh. Disebut juga pembuluh tapis.","Berbeda dengan xilem, floem tersusun atas beberapa sel hidup yang berbeda fungsinya.","Komponen: pembuluh tapis (pengangkut utama), parenkim floem, serat floem, dan sel pengiring.","Berdasarkan letak xilem dan floem, berkas pengangkut dibedakan menjadi tipe kolateral, konsentris, dan radial (lihat Laboratorium)."],
+ kw:["gula","pembuluh tapis","sel pengiring","hidup"]},
+{id:"kolenkim",g:"D",n:"Kolenkim",tag:"Jaringan penyokong",
+ pts:["Tersusun atas sel yang umumnya ramping memanjang, dengan bentuk dan ukuran yang bervariasi.","Dinding sel primer menebal tidak merata karena penumpukan selulosa, pektat, hemiselulosa, dan air.","Menyokong batang muda yang masih tumbuh, tulang daun dikotil, dan memperkuat tangkai bunga (petiola).","Khas di tepi batang dan daun, misalnya batang seledri dan batang bunga matahari."],
+ kw:["dinding primer","tebal tidak merata","batang muda","seledri"]},
+{id:"sklerenkim",g:"D",n:"Sklerenkim",tag:"Jaringan penyokong",
+ pts:["Penyokong dan penguat pada bagian tumbuhan yang tidak lagi tumbuh dan berkembang.","Dinding sekunder tebal dan merata di seluruh permukaan, tersusun atas selulosa dan lignin, sehingga kaku, elastis, kuat, dan lebih keras daripada kolenkim.","Terdiri atas dua jenis sel: serat dan sklereid."],
+ sub:[["Serat","Sel panjang (hingga 50 cm), ramping, ujung tajam. Memperkuat dan menyokong struktur tumbuhan. Contoh: Agave sp. dan Musa textilis, penghasil serat manila (abaka) untuk tenun, tali kapal, tikar, karpet, dan kertas manila."],["Sklereid (sel batu)","Sel pendek berbentuk tidak beraturan dengan dinding sekunder lebih tebal dan mengandung lignin. Ada di batang, daun, buah, dan biji. Contoh: daging buah pir dan tempurung kelapa."]],
+ kw:["lignin","serat","sklereid","dinding sekunder"]}
+];
+
+var CARDS=[
+["Meristem primer","Berasal dari jaringan embrional; ada di pucuk batang dan ujung akar; menyebabkan pertumbuhan primer (tinggi/panjang)."],
+["Meristem sekunder","Berasal dari jaringan dewasa yang berdiferensiasi; menambah diameter batang dan akar serta membentuk jaringan pembuluh."],
+["Meristem interkalar","Ada di antara ruas batang rumput-rumputan; menambah panjang ruas dan memicu terbentuknya bunga."],
+["Kambium vaskuler dan kambium gabus","Dua contoh jaringan meristem sekunder."],
+["Ciri jaringan dewasa","Tidak membelah, sel lebih besar, dinding menebal, vakuola besar, sitoplasma sedikit, ada ruang antarsel, kadang selnya mati."],
+["Epidermis","Lapisan terluar sel tumbuhan (epi = di atas, derma = kulit); sel pipih dan rapat; melindungi jaringan di bawahnya."],
+["Stoma dan trikom","Modifikasi epidermis: stoma = jalan pertukaran gas; trikom = rambut pelindung, kelenjar, sisik, atau papillae."],
+["Parenkim","Jaringan dasar di akar, batang, dan daun; dinding tipis, vakuola besar, mampu berproliferasi untuk menyembuhkan luka dan regenerasi."],
+["Xilem","Mengangkut air dan garam mineral dari akar ke batang dan daun; pembuluh kayu. Terdiri atas trakeid, trakea, serat xilem, parenkim xilem."],
+["Floem","Mengangkut hasil fotosintesis dari daun ke seluruh tubuh; pembuluh tapis. Terdiri atas pembuluh tapis, parenkim floem, serat floem, sel pengiring."],
+["Tipe kolateral","Xilem dan floem berdampingan; floem berada di bagian luar xilem."],
+["Tipe konsentris","Xilem dikelilingi floem, atau sebaliknya."],
+["Tipe radial","Xilem dan floem berselang-seling mengikuti jari-jari lingkaran; dimiliki akar monokotil dan akar primer dikotil."],
+["Kolenkim","Penyokong batang muda yang masih tumbuh; dinding primer menebal tidak merata; contoh batang seledri."],
+["Sklerenkim","Penyokong pada bagian yang tidak tumbuh lagi; dinding sekunder tebal merata dari selulosa dan lignin; terdiri atas serat dan sklereid."],
+["Serat","Sel sklerenkim panjang (hingga 50 cm), ramping, ujung tajam. Contoh: Musa textilis penghasil serat manila atau abaka."],
+["Sklereid","Sel batu: sel sklerenkim pendek tidak beraturan; ada di batang, daun, buah, biji; contoh daging buah pir dan tempurung kelapa."]
+];
+
+/* jawaban benar selalu di indeks 0, diacak saat tampil */
+var QUIZ=[
+["Meristem primer terdapat pada …",["pucuk batang dan ujung akar","antara ruas batang rumput","lapisan kambium gabus","tepi batang dan daun"],"Meristem primer berasal dari jaringan embrional dan berada di pucuk batang dan ujung akar."],
+["Pertumbuhan sekunder pada batang menyebabkan …",["pertambahan diameter batang","pertambahan tinggi batang","terbentuknya embrio","terbentuknya stomata"],"Meristem sekunder menambah diameter batang dan akar serta membentuk jaringan pembuluh."],
+["Meristem interkalar dapat ditemukan pada …",["ruas batang rumput-rumputan","ujung akar kacang","kulit buah pir","tulang daun dikotil"],"Meristem interkalar ada di antara ruas batang rumput, paku ekor kuda, dan beberapa Polygonaceae dan Caryophyllaceae."],
+["Contoh jaringan meristem sekunder adalah …",["kambium vaskuler","parenkim","trakeid","kolenkim"],"Meristem sekunder, contohnya kambium gabus (felogen) dan kambium vaskuler."],
+["Kata epidermis berasal dari bahasa Yunani epi dan derma, yang berarti …",["di atas dan kulit","di dalam dan sel","pelindung dan kayu","mulut dan rambut"],"epi = di atas, derma = kulit."],
+["Ciri khas sel parenkim adalah …",["vakuola tengah yang besar","dinding sekunder berlignin tebal","ujung sel runcing dan panjang","tidak memiliki ruang antarsel"],"Sel parenkim hidup, berdinding tipis, dan memiliki vakuola tengah yang besar."],
+["Parenkim berperan dalam penyembuhan luka karena selnya …",["mampu berproliferasi","bersifat mati dan keras","berlignin tebal","hanya ada di akar"],"Sel parenkim dapat membelah (berproliferasi) sehingga menjadi sumber sel baru untuk menutup luka dan regenerasi."],
+["Fungsi utama xilem adalah mengangkut …",["air dan garam mineral dari akar","gula hasil fotosintesis ke seluruh tubuh","udara melalui stoma","getah lateks ke akar"],"Xilem mengangkut air dan zat makanan mineral dari akar ke batang dan daun."],
+["Berikut yang BUKAN komponen xilem adalah …",["sel pengiring","trakeid","trakea","serat xilem"],"Sel pengiring adalah komponen floem. Xilem terdiri atas trakeid, trakea, serat xilem, dan parenkim xilem."],
+["Hasil fotosintesis dipindahkan dari daun ke seluruh tubuh melalui …",["floem (pembuluh tapis)","xilem (pembuluh kayu)","epidermis","kolenkim"],"Floem memindahkan gula hasil fotosintesis, dan disebut juga pembuluh tapis."],
+["Berkas pengangkut yang xilem dan floemnya berselang-seling mengikuti jari-jari lingkaran disebut tipe …",["radial","kolateral","konsentris","bikolateral"],"Tipe radial dimiliki oleh akar monokotil dan akar primer dikotil."],
+["Pada berkas pengangkut tipe kolateral, floem terletak …",["berdampingan di bagian luar xilem","di dalam, dikelilingi xilem","berselang-seling dengan xilem","terpisah jauh dari xilem"],"Tipe kolateral: xilem dan floem berdampingan, floem berada di luar xilem."],
+["Sel kolenkim memiliki dinding yang …",["primer dan menebal tidak merata","sekunder dan menebal merata","sangat tipis tanpa selulosa","sudah mati dan berlignin"],"Dinding primer kolenkim menebal tidak merata karena penumpukan selulosa, pektat, hemiselulosa, dan air."],
+["Dinding sel sklerenkim tersusun atas …",["selulosa dan lignin","pektin dan air saja","kutin dan lilin","gabus dan getah"],"Kombinasi lignin dan selulosa membuat sklerenkim kaku, kuat, dan keras."],
+["Serat manila atau abaka dihasilkan oleh …",["Musa textilis","Zea mays","Equisetum sp.","buah pir"],"Musa textilis menghasilkan serat manila untuk tenun, tali kapal, tikar, karpet, dan kertas manila."],
+["Tempurung kelapa dan daging buah pir mengandung …",["sklereid (sel batu)","serat xilem","sel pengiring","trikom"],"Sklereid atau sel batu berdinding sekunder sangat tebal dan berlignin."],
+["Pada pohon berkayu, xilem yang lebih tua berfungsi sebagai …",["penopang dan pemberi kekuatan batang","pengangkut gula","pelindung permukaan","tempat pembelahan sel"],"Xilem tua berhenti mengangkut dan menjadi penopang; kayu adalah xilem sekunder."]
+];
+
+var PAIRS=[
+["Meristem primer","Ada di pucuk batang dan ujung akar"],
+["Meristem interkalar","Ada di antara ruas batang rumput"],
+["Kambium vaskuler","Contoh meristem sekunder"],
+["Epidermis","Lapisan terluar yang melindungi jaringan di bawahnya"],
+["Parenkim","Jaringan dasar yang mampu berproliferasi"],
+["Xilem","Mengangkut air dan garam mineral"],
+["Floem","Mengangkut hasil fotosintesis"],
+["Kolenkim","Menyokong batang muda; dinding primer tebal tidak merata"],
+["Serat","Sel sklerenkim panjang hingga 50 cm, ujung tajam"],
+["Sklereid","Sel batu pada tempurung kelapa dan buah pir"]
+];
+
+/* ---------- Header ornamen ---------- */
+(function(){
+  var g="";for(var i=0;i<8;i++){var a=i*Math.PI/4,x=60+34*Math.cos(a),y=60+34*Math.sin(a),d=i*45+90;
+    g+='<g transform="translate('+x.toFixed(1)+' '+y.toFixed(1)+') rotate('+d+')"><ellipse rx="7" ry="6.5" cy="-5" fill="var(--floem)"/><ellipse rx="6" ry="5.5" cy="5" fill="var(--accent)"/></g>';}
+  $("#stemBundles").innerHTML=g;
+})();
+
+/* ---------- Tabs ---------- */
+var TABS=[["materi","Materi"],["lab","Diagram"],["kartu","Kartu"],["kuis","Kuis"],["cocok","Cocokkan"],["tugas","Tugas"]];
+var tabsEl=$("#tabs");
+tabsEl.innerHTML=TABS.map(function(t){return '<button class="tab" role="tab" data-t="'+t[0]+'" aria-selected="false">'+t[1]+'</button>'}).join("");
+function show(id){
+  if(!TABS.some(function(t){return t[0]===id}))id="materi";
+  TABS.forEach(function(t){var p=$("#p-"+t[0]);p.hidden=t[0]!==id});
+  [].forEach.call(tabsEl.children,function(b){var on=b.dataset.t===id;b.setAttribute("aria-selected",on);if(on&&b.scrollIntoView)try{b.scrollIntoView({inline:"center",block:"nearest"})}catch(e){}});
+  if(location.hash!=="#"+id)location.hash=id;
+}
+tabsEl.addEventListener("click",function(e){var b=e.target.closest(".tab");if(b){show(b.dataset.t);window.scrollTo(0,0)}});
+window.addEventListener("hashchange",function(){show(location.hash.slice(1))});
+
+/* ---------- Materi ---------- */
+function chip(t){return '<button class="chip" data-id="'+t.id+'" aria-pressed="false">'+esc(t.n)+'</button>'}
+$("#chipsM").innerHTML=TOPICS.filter(function(t){return t.g==="M"}).map(chip).join("");
+$("#chipsD").innerHTML=TOPICS.filter(function(t){return t.g==="D"}).map(chip).join("");
+function showTopic(id){
+  var t=TOPICS.filter(function(x){return x.id===id})[0];if(!t)return;
+  [].forEach.call(document.querySelectorAll(".chip"),function(c){c.setAttribute("aria-pressed",c.dataset.id===id)});
+  var h='<span class="tag">'+esc(t.tag)+'</span><h3>'+esc(t.n)+'</h3><ul>'+t.pts.map(function(p){return '<li>'+esc(p)+'</li>'}).join("")+'</ul>';
+  if(t.sub)h+='<div class="sublist">'+t.sub.map(function(s){return '<div><b>'+esc(s[0])+'</b>'+esc(s[1])+'</div>'}).join("")+'</div>';
+  h+='<div class="kw">'+t.kw.map(function(k){return '<span>'+esc(k)+'</span>'}).join("")+'</div>';
+  $("#detail").innerHTML=h;
+}
+document.addEventListener("click",function(e){var c=e.target.closest(".chip");if(c)showTopic(c.dataset.id)});
+showTopic("primer");
+
+/* ---------- Lab: berkas pengangkut ---------- */
+var BUNDLES={
+ kolateral:{n:"Kolateral",t:"Xilem dan floem berdampingan. Floem berada di bagian luar xilem, dengan kambium di antaranya.",
+   leg:[["xilem","Xilem"],["floem","Floem"],["kambium","Kambium"]]},
+ konsentris:{n:"Konsentris",t:"Letak xilem dikelilingi oleh floem, atau sebaliknya. Ganti susunannya dengan tombol di bawah diagram.",
+   leg:[["xilem","Xilem"],["floem","Floem"]]},
+ radial:{n:"Radial",t:"Xilem dan floem tersusun berselang-seling mengikuti jari-jari lingkaran. Tipe ini dimiliki oleh akar monokotil dan akar primer dikotil.",
+   leg:[["xilem","Xilem"],["floem","Floem"]]}
+};
+var bType="kolateral",bInner="xilem";
+function dots(pts,r){return pts.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+r+'" fill="var(--kambium)" opacity=".55"/>'}).join("")}
+function bundleSVG(){
+  var s='<svg viewBox="0 0 240 220" role="img" aria-label="Diagram berkas pengangkut tipe '+bType+'">';
+  if(bType==="kolateral"){
+    s+='<defs><clipPath id="cpk"><circle cx="120" cy="110" r="90"/></clipPath></defs><g clip-path="url(#cpk)">'+
+    '<rect x="30" y="20" width="180" height="84" fill="var(--floem)"/>'+
+    '<rect x="30" y="104" width="180" height="12" fill="var(--kambium)"/>'+
+    '<rect x="30" y="116" width="180" height="94" fill="var(--xilem)"/>'+
+    dots([[70,50],[100,40],[140,42],[170,52],[85,72],[120,65],[155,76],[100,90],[140,92],[120,30]],4)+
+    '<circle cx="100" cy="150" r="9" fill="var(--surface)" opacity=".55"/><circle cx="140" cy="150" r="9" fill="var(--surface)" opacity=".55"/><circle cx="120" cy="180" r="9" fill="var(--surface)" opacity=".55"/></g>'+
+    '<circle cx="120" cy="110" r="90" fill="none" stroke="var(--fg)" stroke-width="2"/>';
+  }else if(bType==="konsentris"){
+    var outer=bInner==="xilem"?"var(--floem)":"var(--xilem)",inner=bInner==="xilem"?"var(--xilem)":"var(--floem)";
+    s+='<circle cx="120" cy="110" r="90" fill="'+outer+'" stroke="var(--fg)" stroke-width="2"/><circle cx="120" cy="110" r="46" fill="'+inner+'" stroke="var(--fg)" stroke-width="1.5"/>';
+    var ring=[];for(var i=0;i<12;i++){var a=i*Math.PI/6;ring.push([(120+68*Math.cos(a)).toFixed(1),(110+68*Math.sin(a)).toFixed(1)])}
+    if(bInner==="xilem")s+=dots(ring,4)+'<circle cx="104" cy="104" r="8" fill="var(--surface)" opacity=".55"/><circle cx="136" cy="104" r="8" fill="var(--surface)" opacity=".55"/><circle cx="120" cy="132" r="8" fill="var(--surface)" opacity=".55"/>';
+    else s+=dots([[108,100],[132,100],[120,122],[120,108]],4)+ring.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="8" fill="var(--surface)" opacity=".55"/>'}).join("");
+  }else{
+    var arm='<path d="M120 112 C106 92 102 66 120 34 C138 66 134 92 120 112 Z" fill="var(--xilem)" stroke="var(--fg)" stroke-width="1.2"/>';
+    s+='<circle cx="120" cy="110" r="90" fill="var(--ground)" stroke="var(--fg)" stroke-width="2"/>';
+    [0,90,180,270].forEach(function(a){s+='<g transform="rotate('+a+' 120 110)">'+arm+'</g>'});
+    [[76,66],[164,66],[76,154],[164,154]].forEach(function(p){s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="15" fill="var(--floem)" stroke="var(--fg)" stroke-width="1.2"/>'+dots([[p[0]-5,p[1]-4],[p[0]+5,p[1]-3],[p[0],p[1]+5]],2.6)});
+  }
+  return s+'</svg>';
+}
+function renderBundle(){
+  $("#bundleSeg").innerHTML=Object.keys(BUNDLES).map(function(k){return '<button data-b="'+k+'" aria-pressed="'+(k===bType)+'">'+BUNDLES[k].n+'</button>'}).join("");
+  var b=BUNDLES[bType];
+  var h=bundleSVG();
+  if(bType==="konsentris")h+='<div class="seg" style="margin:12px 0 0;justify-content:center" id="innerSeg"><button data-i="xilem" aria-pressed="'+(bInner==="xilem")+'">Xilem di dalam</button><button data-i="floem" aria-pressed="'+(bInner==="floem")+'">Floem di dalam</button></div>';
+  $("#bundleSvg").innerHTML=h;
+  var leg=b.leg.map(function(l){return '<span><i style="background:var(--'+l[0]+')"></i>'+l[1]+'</span>'}).join("");
+  $("#bundleText").innerHTML='<h3>Tipe '+b.n.toLowerCase()+'</h3><p>'+esc(b.t)+'</p><div class="legend">'+leg+'</div>';
+}
+$("#bundleSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b){bType=b.dataset.b;renderBundle()}});
+$("#bundleSvg").addEventListener("click",function(e){var b=e.target.closest("[data-i]");if(b){bInner=b.dataset.i;renderBundle()}});
+renderBundle();
+
+/* ---------- Lab: dinding sel ---------- */
+var wMode="kolenkim";
+function hex(r){var p=[];for(var i=0;i<6;i++){var a=Math.PI/3*i;p.push((130+r*Math.cos(a)).toFixed(1)+","+(120+r*Math.sin(a)).toFixed(1))}return p.join(" ")}
+function wallSVG(){
+  var s='<svg viewBox="0 0 260 240" role="img" aria-label="Penampang dinding sel '+wMode+'">';
+  if(wMode==="kolenkim"){
+    s+='<polygon points="'+hex(100)+'" fill="var(--wall)" stroke="var(--fg)" stroke-width="1.5"/><circle cx="130" cy="120" r="70" fill="var(--lumen)" stroke="var(--fg)" stroke-width="1"/><ellipse cx="130" cy="120" rx="30" ry="24" fill="var(--surface)" opacity=".45"/>';
+  }else{
+    s+='<polygon points="'+hex(100)+'" fill="var(--wall2)" stroke="var(--wall)" stroke-width="8" stroke-linejoin="round"/>';
+    for(var i=0;i<6;i++){var a=Math.PI/3*i;
+      s+='<line x1="'+(130+24*Math.cos(a)).toFixed(1)+'" y1="'+(120+24*Math.sin(a)).toFixed(1)+'" x2="'+(130+80*Math.cos(a)).toFixed(1)+'" y2="'+(120+80*Math.sin(a)).toFixed(1)+'" stroke="var(--lumen)" stroke-width="5" stroke-linecap="round"/>';}
+    s+='<circle cx="130" cy="120" r="26" fill="var(--lumen)" stroke="var(--fg)" stroke-width="1"/>';
+  }
+  return s+'</svg>';
+}
+var WALLS={
+ kolenkim:{h:"Kolenkim",t:"Hanya memiliki dinding primer, dan penebalannya tidak merata: paling tebal di sudut sel. Karena itu kolenkim kuat tetapi tetap lentur, cocok menyokong batang muda yang masih tumbuh.",
+   leg:[["wall","Dinding primer"],["lumen","Rongga sel"]]},
+ sklerenkim:{h:"Sklerenkim",t:"Dinding sekunder tebal merata di seluruh permukaan sel dan mengandung lignin. Saluran sempit yang menembus dinding disebut noktah. Sel dewasa sering mati, sehingga hanya menyisakan dinding yang kaku dan keras.",
+   leg:[["wall","Dinding primer"],["wall2","Dinding sekunder"],["lumen","Rongga sel dan noktah"]]}
+};
+function renderWall(){
+  $("#wallSeg").innerHTML=Object.keys(WALLS).map(function(k){return '<button data-w="'+k+'" aria-pressed="'+(k===wMode)+'">'+WALLS[k].h+'</button>'}).join("");
+  $("#wallSvg").innerHTML=wallSVG();
+  var w=WALLS[wMode];
+  $("#wallText").innerHTML='<h3>'+w.h+'</h3><p>'+esc(w.t)+'</p><div class="legend">'+w.leg.map(function(l){return '<span><i style="background:var(--'+l[0]+')"></i>'+l[1]+'</span>'}).join("")+'</div>';
+}
+$("#wallSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b){wMode=b.dataset.w;renderWall()}});
+renderWall();
+
+/* ---------- Kartu belajar ---------- */
+var deck=[],cur=0,flipped=false,totalCards=CARDS.length,known=0;
+function newDeck(){deck=shuffle(CARDS.map(function(c,i){return i}));known=0;flipped=false;renderDeck()}
+function renderDeck(){
+  var a=$("#deckArea");
+  $("#deckBar").style.width=(known/totalCards*100)+"%";
+  $("#deckCount").textContent=known+" dari "+totalCards+" paham";
+  if(!deck.length){
+    a.innerHTML='<div class="card" style="text-align:center;display:grid;gap:14px;justify-items:center"><h3>Semua kartu sudah dipahami</h3><p class="muted">Lanjutkan dengan kuis atau permainan mencocokkan.</p><div class="row"><button class="btn primary" id="again">Ulangi kartu</button><button class="btn" data-go="kuis">Ke kuis</button></div></div>';
+    return;
+  }
+  var c=CARDS[deck[0]];
+  a.innerHTML='<button class="flash'+(flipped?' back':'')+'" id="flash" aria-label="Balik kartu">'+
+    (flipped?'<small>Penjelasan</small><div class="def">'+esc(c[1])+'</div>':'<small>Istilah</small><div class="term">'+esc(c[0])+'</div><div class="hint">Ketuk untuk melihat penjelasan</div>')+'</button>'+
+    '<div class="row" style="margin-top:14px"><button class="btn" id="again2">Belum paham</button><button class="btn primary" id="gotit">Paham</button></div>';
+}
+$("#deckArea").addEventListener("click",function(e){
+  var t=e.target.closest("button");if(!t)return;
+  if(t.id==="flash"){flipped=!flipped;renderDeck()}
+  else if(t.id==="gotit"){deck.shift();known++;flipped=false;renderDeck()}
+  else if(t.id==="again2"){deck.push(deck.shift());flipped=false;renderDeck()}
+  else if(t.id==="again"){newDeck()}
+  else if(t.dataset.go){show(t.dataset.go)}
+});
+newDeck();
+
+/* ---------- Kuis ---------- */
+var qs=[],qi=0,qScore=0,wrong=[],answered=false;
+var best=store("jt_best");if(best)$("#bestScore").textContent=best+"/10";
+function startQuiz(){qs=shuffle(QUIZ).slice(0,10);qi=0;qScore=0;wrong=[];renderQ()}
+function renderQ(){
+  var a=$("#quizArea");answered=false;
+  if(qi>=qs.length){
+    var prev=parseInt(store("jt_best")||"0",10);if(qScore>prev){store("jt_best",String(qScore));$("#bestScore").textContent=qScore+"/10"}
+    var msg=qScore>=9?"Sangat baik. Materi jaringan tumbuhan sudah kamu kuasai.":qScore>=7?"Baik. Ulangi bagian yang masih salah.":"Pelajari lagi materi dan kartu belajar, lalu coba kuis ini kembali.";
+    a.innerHTML='<div class="qmeta"><span>Hasil kuis</span></div><div class="score">'+qScore+'/'+qs.length+'</div><p>'+msg+'</p>'+
+      (wrong.length?'<h3 style="font-size:1.1rem">Yang perlu dipelajari lagi</h3><div class="review">'+wrong.map(function(w){return '<div><b>'+esc(w.q)+'</b><br>Jawaban benar: '+esc(w.a)+'</div>'}).join("")+'</div>':'')+
+      '<div class="row"><button class="btn primary" id="qagain">Main lagi</button><button class="btn" data-go="materi">Buka materi</button></div>';
+    return;
+  }
+  var q=qs[qi],opts=shuffle(q[1].map(function(o,i){return{t:o,ok:i===0}}));
+  q._opts=opts;
+  a.innerHTML='<div class="qmeta"><span>Soal '+(qi+1)+' dari '+qs.length+'</span><span>Benar: '+qScore+'</span></div><div class="qtext">'+esc(q[0])+'</div><div class="opts">'+
+    opts.map(function(o,i){return '<button class="opt" data-i="'+i+'"><span class="l">'+"ABCD"[i]+'</span><span>'+esc(o.t)+'</span></button>'}).join("")+'</div><div id="qfb"></div>';
+}
+$("#quizArea").addEventListener("click",function(e){
+  var t=e.target.closest("button");if(!t)return;
+  if(t.id==="qagain"){startQuiz();return}
+  if(t.dataset.go){show(t.dataset.go);return}
+  if(t.id==="qnext"){qi++;renderQ();return}
+  if(t.classList.contains("opt")&&!answered){
+    answered=true;var q=qs[qi],o=q._opts[+t.dataset.i];
+    [].forEach.call(document.querySelectorAll(".opt"),function(b,i){b.disabled=true;if(q._opts[i].ok)b.classList.add("ok")});
+    if(o.ok)qScore++;else{t.classList.add("no");wrong.push({q:q[0],a:q[1][0]})}
+    $("#qfb").innerHTML='<div class="expl"><b>'+(o.ok?"Benar. ":"Belum tepat. ")+'</b>'+esc(q[2])+'</div><div class="row" style="margin-top:12px"><button class="btn primary" id="qnext">'+(qi+1>=qs.length?"Lihat hasil":"Soal berikutnya")+'</button></div>';
+  }
+});
+startQuiz();
+
+/* ---------- Cocokkan ---------- */
+var mp=[],mL=[],mR=[],selL=null,selR=null,mDone={},mist=0;
+function startMatch(){
+  mp=shuffle(PAIRS).slice(0,6);mL=shuffle(mp.map(function(p,i){return i}));mR=shuffle(mp.map(function(p,i){return i}));
+  selL=selR=null;mDone={};mist=0;renderMatch();
+}
+function renderMatch(){
+  var n=Object.keys(mDone).length;
+  $("#matchInfo").textContent=n+" dari "+mp.length+" cocok · salah "+mist;
+  function b(side,i){var cls="m"+(side==="L"?" term":"")+(mDone[i]?" done":"")+((side==="L"&&selL===i)||(side==="R"&&selR===i)?" sel":"");
+    return '<button class="'+cls+'" data-s="'+side+'" data-i="'+i+'"'+(mDone[i]?' disabled':'')+'>'+esc(mp[i][side==="L"?0:1])+'</button>'}
+  $("#matchArea").innerHTML='<div class="col">'+mL.map(function(i){return b("L",i)}).join("")+'</div><div class="col">'+mR.map(function(i){return b("R",i)}).join("")+'</div>';
+  $("#matchDone").textContent=n===mp.length?(mist===0?"Sempurna, tanpa salah.":"Selesai dengan "+mist+" kesalahan. Coba lagi untuk hasil lebih baik."):"";
+}
+$("#matchArea").addEventListener("click",function(e){
+  var t=e.target.closest(".m");if(!t||t.disabled)return;
+  var i=+t.dataset.i;if(t.dataset.s==="L")selL=(selL===i?null:i);else selR=(selR===i?null:i);
+  if(selL!==null&&selR!==null){
+    if(selL===selR){mDone[selL]=true;selL=selR=null;renderMatch()}
+    else{mist++;var l=selL,r=selR;selL=selR=null;renderMatch();
+      var bl=document.querySelector('.m[data-s="L"][data-i="'+l+'"]'),br=document.querySelector('.m[data-s="R"][data-i="'+r+'"]');
+      if(bl)bl.classList.add("wrong");if(br)br.classList.add("wrong");
+      setTimeout(function(){if(bl)bl.classList.remove("wrong");if(br)br.classList.remove("wrong")},600);}
+  }else renderMatch();
+});
+$("#matchReset").addEventListener("click",startMatch);
+startMatch();
+
+/* ---------- Tugas ---------- */
+["t1","t2"].forEach(function(id){
+  var el=$("#"+id),v=store("jt_"+id);if(v)el.value=v;
+  el.addEventListener("input",function(){store("jt_"+id,el.value)});
+});
+["ringA","ringB"].forEach(function(id){var v=store("jt_"+id);if(v)$("#"+id).value=v;$("#"+id).addEventListener("input",function(){store("jt_"+id,$("#"+id).value);ring()})});
+function ring(){
+  var a=$("#ringA").value,b=$("#ringB").value,o=$("#ringOut");
+  if(a===""||b===""){o.textContent="Isi kedua hasil hitungan untuk membandingkan.";return}
+  var d=Math.abs(+a-+b);
+  o.textContent=d===0?"Hasil kalian sama: "+a+" tahun.":"Selisih "+d+" tahun. Rata-rata perkiraan kalian "+((+a+ +b)/2).toFixed(1).replace(/\.0$/,"")+" tahun.";
+}
+ring();
+
+show(location.hash.slice(1));
+})();
+</script>
+
+</body></html>
